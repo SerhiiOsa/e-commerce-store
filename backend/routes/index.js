@@ -6,12 +6,6 @@ import couponRoutes from './coupon.route.js';
 import paymentRoutes from './payment.route.js';
 import analyticsRoutes from './analitycs.route.js';
 
-const router = express.Router();
-
-router.get('/', (req, res) => {
-  res.send('Server is ready');
-});
-
 const apiRouter = express.Router();
 
 apiRouter.use('/auth', authRoutes);
