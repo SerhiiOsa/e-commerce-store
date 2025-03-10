@@ -9,12 +9,10 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { login, loading } = useUserStore();
-  const { getCartItems } = useCartStore();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    await login(email, password);
-    getCartItems();
+    login(email, password);
   };
 
   return (
