@@ -1,14 +1,18 @@
 import User from '../models/user.model.js';
 import Product from '../models/product.model.js';
 import Order from '../models/order.model.js';
+import {
+  calculateStartDate,
+  getDatesInRange,
+} from '../helpers/analyticsHelpers.js';
 
 export default {
-  async getAnaliticsData() {
+  async getAnaliticsData(period) {
     const totalUsers = await User.countDocuments();
     const totalProducts = await Product.countDocuments();
 
     const endDate = new Date();
-    const startDate = new Date(endDate.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const startDate = calculateStartDate(period);
 
     const salesData = await Order.aggregate([
       {
@@ -50,7 +54,10 @@ export default {
       const foundData = dailySalesData.find((item) => item._id === date);
 
       return {
-        date,
+        name:
+          dateArray.length <= 8
+            ? date
+            : date.slice(8, 11) + '.' + date.slice(5, 7),
         sales: foundData?.sales || 0,
         revenue: foundData?.revenue || 0,
       };
@@ -67,15 +74,3 @@ export default {
     };
   },
 };
-
-function getDatesInRange(startDate, endDate) {
-  const dates = [];
-  let currentDate = new Date(startDate);
-
-  while (currentDate <= endDate) {
-    dates.push(currentDate.toISOString().split('T')[0]);
-    currentDate.setDate(currentDate.getDate() + 1);
-  }
-
-  return dates;
-}

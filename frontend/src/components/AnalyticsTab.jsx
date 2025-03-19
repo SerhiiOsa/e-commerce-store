@@ -13,7 +13,15 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
+const periods = [
+  { id: '7days', label: 'Last 7 days', searchParam: '' },
+  { id: 'currentMonth', label: 'Current month', searchParam: 'month' },
+  { id: 'currentYear', label: 'Current year', searchParam: 'year' },
+];
+
 const AnalyticsTab = () => {
+  const [activePeriod, setActivePeriod] = useState(periods[0]);
+
   const [analyticsData, setAnalyticsData] = useState({
     users: 0,
     products: 0,
@@ -26,7 +34,9 @@ const AnalyticsTab = () => {
   useEffect(() => {
     const fetchAnalyticsData = async () => {
       try {
-        const response = await axios.get('/analytics');
+        const response = await axios.get(
+          `/analytics?period=${activePeriod.searchParam || ''}`
+        );
         setAnalyticsData(response.data.analyticsData);
         setDailySalesData(response.data.dailySalesData);
       } catch (error) {
@@ -37,7 +47,7 @@ const AnalyticsTab = () => {
     };
 
     fetchAnalyticsData();
-  }, []);
+  }, [activePeriod]);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -71,6 +81,23 @@ const AnalyticsTab = () => {
           color="from-emerald-500 to-lime-700"
         />
       </div>
+
+      <div className="flex mb-3">
+        {periods.map((period) => (
+          <button
+            key={period.id}
+            onClick={() => setActivePeriod(period)}
+            className={`flex items-center px-3 py-1 mx-2 rounded-md transition-colors duration-200 cursor-pointer ${
+              activePeriod.id === period.id
+                ? 'bg-emerald-600 text-white'
+                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+            }`}
+          >
+            {period.label}
+          </button>
+        ))}
+      </div>
+
       <motion.div
         className="bg-gray-800/60 rounded-lg p-6 shadow-lg"
         initial={{ opacity: 0, y: 20 }}
