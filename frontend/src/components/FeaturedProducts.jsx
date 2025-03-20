@@ -50,7 +50,12 @@ const FeaturedProducts = ({ featuredProducts }) => {
               }}
             >
               {featuredProducts?.map((product) => (
-                <ProductCard key={product._id} product={product} />
+                <div
+                  key={product._id}
+                  className="w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 flex-shrink-0 px-2"
+                >
+                  <ProductCard product={product} />
+                </div>
               ))}
             </div>
           </div>
@@ -60,7 +65,7 @@ const FeaturedProducts = ({ featuredProducts }) => {
             className={`absolute top-1/2 -left-4 transform -translate-y-1/2 p-2 rounded-full transition-colors duration-300 ${
               isStartDisabled
                 ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-emerald-600 hover:bg-emerald-500 cursor-pointer'
+                : 'bg-emerald-600 hover:bg-emerald-500'
             }`}
           >
             <ChevronLeft className="w-6 h-6" />
@@ -72,7 +77,7 @@ const FeaturedProducts = ({ featuredProducts }) => {
             className={`absolute top-1/2 -right-4 transform -translate-y-1/2 p-2 rounded-full transition-colors duration-300 ${
               isEndDisabled
                 ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-emerald-600 hover:bg-emerald-500 cursor-pointer'
+                : 'bg-emerald-600 hover:bg-emerald-500'
             }`}
           >
             <ChevronRight className="w-6 h-6" />

@@ -2,14 +2,20 @@ import redisClient from '../config/redis.js';
 import cloudinary from '../config/cloudinary.js';
 
 export const getStoredFeaturedProducts = async () => {
-  const storedData = await redisClient.get('featured_products');
-  if (storedData) {
-    return JSON.parse(storedData);
+  try {
+    const storedData = await redisClient.get('featured_products');
+    return storedData ? JSON.parse(storedData) : null;
+  } catch (error) {
+    console.error('Redis error (getStoredFeaturedProducts):', error);
   }
 };
 
 export const storeFeaturedProducts = async (products) => {
-  await redisClient.set('featured_products', JSON.stringify(products));
+  try {
+    await redisClient.set('featured_products', JSON.stringify(products));
+  } catch (error) {
+    console.error('Redis error (storeFeaturedProducts):', error);
+  }
 };
 
 export const storeImageToCloudinary = async (image) => {

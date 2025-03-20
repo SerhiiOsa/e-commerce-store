@@ -3,14 +3,26 @@ import { motion } from 'framer-motion';
 import { useProductStore } from '../stores/useProductStore';
 import { useParams } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
+import { useCategoryStore } from '../stores/useCategoryStore';
 
 const CategoryPage = () => {
   const { fetchProductsByCategory, products } = useProductStore();
+  const { fetchUsedCategories, categories } = useCategoryStore();
   const { category } = useParams();
 
   useEffect(() => {
-    fetchProductsByCategory(category);
-  }, [fetchProductsByCategory, category]);
+    fetchUsedCategories();
+  }, [fetchUsedCategories]);
+
+  const categoryData = categories?.find((item) => item.name === category);
+  const categoryId = categoryData?._id;
+
+  useEffect(() => {
+    if (categoryId) {
+      fetchProductsByCategory(categoryId);
+    }
+  }, [fetchProductsByCategory, categoryId]);
+
   return (
     <div className="min-h-screen">
       <div className="relative z-10 max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-16">

@@ -8,7 +8,7 @@ import Product from '../models/product.model.js';
 
 export default {
   async getAllProducts() {
-    return await Product.find();
+    return await Product.find().populate('category', 'name');
   },
 
   async getFeaturedProducts() {
@@ -60,6 +60,9 @@ export default {
     }
 
     await Product.findByIdAndDelete(productId);
+
+    const featuredProducts = await Product.find({ isFeatured: true }).lean();
+    await storeFeaturedProducts(featuredProducts);
   },
 
   async getRecommendedProducts() {
