@@ -1,6 +1,8 @@
 import {
   deleteImageFromCloudinary,
+  getCategoryOrFail,
   storeImageToCloudinary,
+  validateCategoryDeletion,
 } from '../helpers/categoryHelpers.js';
 import Category from '../models/category.model.js';
 
@@ -13,20 +15,20 @@ export default {
     return await Category.aggregate([
       {
         $lookup: {
-          from: 'products', // Назва колекції продуктів
-          localField: '_id', // Поле _id у категорії
-          foreignField: 'category', // Поле category у продукті (ref на Category)
+          from: 'products',
+          localField: '_id',
+          foreignField: 'category',
           as: 'products',
         },
       },
       {
         $match: {
-          products: { $ne: [] }, // Залишаємо лише категорії, які мають продукти
+          products: { $ne: [] },
         },
       },
       {
         $project: {
-          products: 0, // Видаляємо зайве поле products
+          products: 0,
         },
       },
     ]);
@@ -43,14 +45,28 @@ export default {
     return category;
   },
 
-  async deleteCategory(categoryId) {
-    const category = await Category.findById(categoryId);
+  async updateCategory(categoryId, name, image) {
+    const category = getCategoryOrFail(categoryId);
 
-    if (!category) {
-      const error = new Error('Category not found');
-      error.statusCode = 404;
-      throw error;
+    let imageUrl = category.image;
+    if (image) {
+      await deleteImageFromCloudinary(category.image);
+      imageUrl = await storeImageToCloudinary(image);
     }
+
+    const updatedCategory = await Category.findByIdAndUpdate(
+      categoryId,
+      { name, image: imageUrl },
+      { new: true }
+    );
+
+    return updatedCategory;
+  },
+
+  async deleteCategory(categoryId) {
+    const category = getCategoryOrFail(categoryId);
+
+    await validateCategoryDeletion(categoryId);
 
     if (category.image) {
       await deleteImageFromCloudinary(category.image);

@@ -44,6 +44,27 @@ export const createProduct = async (req, res) => {
   }
 };
 
+export const updateProduct = async (req, res) => {
+  try {
+    const productId = req.params.id;
+    const { name, description, price, image, category } = req.body;
+
+    const updatedProduct = await productService.updateProduct(
+      productId,
+      name,
+      description,
+      price,
+      category,
+      image
+    );
+
+    res.status(201).json(updatedProduct);
+  } catch (error) {
+    console.error('Error in updateProduct controller: ', error.message);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 export const deleteProduct = async (req, res) => {
   try {
     const productId = req.params.id;

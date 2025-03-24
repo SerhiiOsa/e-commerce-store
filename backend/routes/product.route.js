@@ -7,6 +7,7 @@ import {
   getProductsByCategory,
   getRecommendedProducts,
   toggleFeaturedProduct,
+  updateProduct,
 } from '../controllers/product.controller.js';
 import authCheck from '../middleware/authCheck.js';
 import adminCheck from '../middleware/adminCheck.js';
@@ -21,6 +22,7 @@ router.use(authCheck, adminCheck);
 
 router.get('/', getAllProducts);
 router.post('/', createProduct);
+router.put('/:id', updateProduct);
 router.patch('/:id', toggleFeaturedProduct);
 router.delete('/:id', deleteProduct);
 

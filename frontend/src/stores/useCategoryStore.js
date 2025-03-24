@@ -43,6 +43,22 @@ export const useCategoryStore = create((set) => ({
     }
   },
 
+  updateCategory: async (id, categoryData) => {
+    set({ loading: true });
+    try {
+      const response = await axios.put(`/categories/${id}`, categoryData);
+      set((prevState) => ({
+        categories: prevState.categories.map((item) =>
+          item._id === id ? response.data : item
+        ),
+        loading: false,
+      }));
+    } catch (error) {
+      toast.error(error.response.data.error);
+      set({ loading: false });
+    }
+  },
+
   deleteCategory: async (categoryId) => {
     set({ loading: true });
     try {

@@ -43,7 +43,31 @@ export default {
       category,
     });
 
-    return product;
+    return await product.populate('category', 'name');
+  },
+
+  async updateProduct(productId, name, description, price, category, image) {
+    const product = await Product.findById(productId);
+
+    let imageUrl = product.image;
+    if (image) {
+      await deleteImageFromCloudinary(product.image);
+      imageUrl = await storeImageToCloudinary(image);
+    }
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      {
+        name,
+        description,
+        price,
+        image: imageUrl,
+        category,
+      },
+      { new: true }
+    ).populate('category', 'name');
+
+    return updatedProduct;
   },
 
   async deleteProduct(productId) {

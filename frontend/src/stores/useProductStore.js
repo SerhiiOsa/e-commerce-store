@@ -54,6 +54,22 @@ export const useProductStore = create((set) => ({
     }
   },
 
+  updateProduct: async (id, productData) => {
+    set({ loading: true });
+    try {
+      const response = await axios.put(`/products/${id}`, productData);
+      set((prevState) => ({
+        products: prevState.products.map((item) =>
+          item._id === id ? response.data : item
+        ),
+        loading: false,
+      }));
+    } catch (error) {
+      toast.error(error.response.data.error);
+      set({ loading: false });
+    }
+  },
+
   deleteProduct: async (productId) => {
     set({ loading: true });
     try {

@@ -35,6 +35,16 @@ export const createCategory = async (req, res) => {
 
 export const updateCategory = async (req, res) => {
   try {
+    const categoryId = req.params.id;
+    const { name, image } = req.body;
+
+    const updatedCategory = await categoryService.updateCategory(
+      categoryId,
+      name,
+      image
+    );
+
+    res.status(200).json(updatedCategory);
   } catch (error) {
     console.error('Error in updateCategory controller: ', error.message);
     res.status(500).json({ message: 'Internal server error' });
