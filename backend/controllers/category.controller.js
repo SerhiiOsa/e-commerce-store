@@ -1,68 +1,55 @@
+import { asyncHandler } from './asyncHandler.js';
 import categoryService from '../services/category.service.js';
 
-export const getAllCategories = async (req, res) => {
-  try {
-    const categories = await categoryService.getAllCategories();
-    res.status(200).json({ categories });
-  } catch (error) {
-    console.error('Error in getAllCategoriesy controller: ', error.message);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-};
+export const getAllCategories = asyncHandler(async function getAllCategories(
+  req,
+  res
+) {
+  const categories = await categoryService.getAllCategories();
+  res.status(200).json({ categories });
+});
 
-export const getUsedCategories = async (req, res) => {
-  try {
-    const categories = await categoryService.getUsedCategories();
-    res.status(200).json({ categories });
-  } catch (error) {
-    console.error('Error in getAllCategoriesy controller: ', error.message);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-};
+export const getUsedCategories = asyncHandler(async function getUsedCategories(
+  req,
+  res
+) {
+  const categories = await categoryService.getUsedCategories();
+  res.status(200).json({ categories });
+});
 
-export const createCategory = async (req, res) => {
-  try {
-    const { name, image } = req.body;
+export const createCategory = asyncHandler(async function createCategory(
+  req,
+  res
+) {
+  const { name, image } = req.body;
 
-    const category = await categoryService.createCategory(name, image);
+  const category = await categoryService.createCategory(name, image);
 
-    res.status(201).json(category);
-  } catch (error) {
-    console.error('Error in createCategory controller: ', error.message);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-};
+  res.status(201).json(category);
+});
 
-export const updateCategory = async (req, res) => {
-  try {
-    const categoryId = req.params.id;
-    const { name, image } = req.body;
+export const updateCategory = asyncHandler(async function updateCategory(
+  req,
+  res
+) {
+  const categoryId = req.params.id;
+  const { name, image } = req.body;
 
-    const updatedCategory = await categoryService.updateCategory(
-      categoryId,
-      name,
-      image
-    );
+  const updatedCategory = await categoryService.updateCategory(
+    categoryId,
+    name,
+    image
+  );
 
-    res.status(200).json(updatedCategory);
-  } catch (error) {
-    console.error('Error in updateCategory controller: ', error.message);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-};
+  res.status(200).json(updatedCategory);
+});
 
-export const deleteCategory = async (req, res) => {
-  try {
-    const categoryId = req.params.id;
-    await categoryService.deleteCategory(categoryId);
+export const deleteCategory = asyncHandler(async function deleteCategory(
+  req,
+  res
+) {
+  const categoryId = req.params.id;
+  await categoryService.deleteCategory(categoryId);
 
-    return res.status(200).json({ message: 'Category deleted successfully' });
-  } catch (error) {
-    if (error.statusCode === 404) {
-      return res.status(404).json({ message: 'Category not found' });
-    }
-
-    console.error('Error in deleteCategory controller: ', error.message);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-};
+  return res.status(200).json({ message: 'Category deleted successfully' });
+});

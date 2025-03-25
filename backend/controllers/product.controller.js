@@ -1,126 +1,90 @@
+import { asyncHandler } from './asyncHandler.js';
 import productService from '../services/product.service.js';
 
-export const getAllProducts = async (req, res) => {
-  try {
-    const products = await productService.getAllProducts();
-    res.status(200).json({ products });
-  } catch (error) {
-    console.error('Error in getAllProducts controller: ', error.message);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-};
+export const getAllProducts = asyncHandler(async function getAllProducts(
+  req,
+  res
+) {
+  const products = await productService.getAllProducts();
+  res.status(200).json({ products });
+});
 
-export const getFeaturedProducts = async (req, res) => {
-  try {
+export const getFeaturedProducts = asyncHandler(
+  async function getFeaturedProducts(req, res) {
     const featuredProducts = await productService.getFeaturedProducts();
-
     res.status(200).json({ products: featuredProducts });
-  } catch (error) {
-    if (error.statusCode === 404) {
-      return res.status(404).json({ message: 'No featured products found' });
-    }
-
-    console.error('Error in getFeaturedProducts controller: ', error.message);
-    res.status(500).json({ message: 'Internal server error' });
   }
-};
+);
 
-export const createProduct = async (req, res) => {
-  try {
-    const { name, description, price, image, category } = req.body;
+export const createProduct = asyncHandler(async function createProduct(
+  req,
+  res
+) {
+  const { name, description, price, image, category } = req.body;
 
-    const product = await productService.createProduct(
-      name,
-      description,
-      price,
-      image,
-      category
-    );
+  const product = await productService.createProduct(
+    name,
+    description,
+    price,
+    image,
+    category
+  );
 
-    res.status(201).json(product);
-  } catch (error) {
-    console.error('Error in createProduct controller: ', error.message);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-};
+  res.status(201).json(product);
+});
 
-export const updateProduct = async (req, res) => {
-  try {
-    const productId = req.params.id;
-    const { name, description, price, image, category } = req.body;
+export const updateProduct = asyncHandler(async function updateProduct(
+  req,
+  res
+) {
+  const productId = req.params.id;
+  const { name, description, price, image, category } = req.body;
 
-    const updatedProduct = await productService.updateProduct(
-      productId,
-      name,
-      description,
-      price,
-      category,
-      image
-    );
+  const updatedProduct = await productService.updateProduct(
+    productId,
+    name,
+    description,
+    price,
+    category,
+    image
+  );
 
-    res.status(201).json(updatedProduct);
-  } catch (error) {
-    console.error('Error in updateProduct controller: ', error.message);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-};
+  res.status(201).json(updatedProduct);
+});
 
-export const deleteProduct = async (req, res) => {
-  try {
-    const productId = req.params.id;
-    await productService.deleteProduct(productId);
+export const deleteProduct = asyncHandler(async function deleteProduct(
+  req,
+  res
+) {
+  const productId = req.params.id;
+  await productService.deleteProduct(productId);
 
-    return res.status(200).json({ message: 'Product deleted successfully' });
-  } catch (error) {
-    if (error.statusCode === 404) {
-      return res.status(404).json({ message: 'Product not found' });
-    }
+  res.status(200).json({ message: 'Product deleted successfully' });
+});
 
-    console.error('Error in deleteProduct controller: ', error.message);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-};
-
-export const getRecommendedProducts = async (req, res) => {
-  try {
+export const getRecommendedProducts = asyncHandler(
+  async function getRecommendedProducts(req, res) {
     const products = await productService.getRecommendedProducts();
     res.status(200).json({ products });
-  } catch (error) {
-    console.error(
-      'Error in getRecommendedProducts controller: ',
-      error.message
-    );
-    res.status(500).json({ message: 'Internal server error' });
   }
-};
+);
 
-export const getProductsByCategory = async (req, res) => {
-  try {
+export const getProductsByCategory = asyncHandler(
+  async function getProductsByCategory(req, res) {
     const category = req.params.category;
     const products = await productService.getProductsByCategory(category);
 
     res.status(200).json({ products });
-  } catch (error) {
-    console.error('Error in getProductsByCategory controller: ', error.message);
-    res.status(500).json({ message: 'Internal server error' });
   }
-};
+);
 
-export const toggleFeaturedProduct = async (req, res) => {
-  try {
+export const toggleFeaturedProduct = asyncHandler(
+  async function toggleFeaturedProduct(req, res) {
     const productId = req.params.id;
-
     const updatedProduct = await productService.toggleFeaturedProduct(
       productId
     );
 
     res.status(200).json(updatedProduct);
-  } catch (error) {
-    if (error.statusCode === 404) {
-      return res.status(404).json({ message: 'Product not found' });
-    }
-
-    console.error('Error in toggleFeaturedProduct controller: ', error.message);
-    res.status(500).json({ message: 'Internal server error' });
   }
-};
+);
