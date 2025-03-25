@@ -8,6 +8,11 @@ import {
 } from '../controllers/category.controller.js';
 import authCheck from '../middleware/authCheck.js';
 import adminCheck from '../middleware/adminCheck.js';
+import validate from '../middleware/validator.js';
+import {
+  createCategorySchema,
+  updateCategorytSchema,
+} from '../validators/category.validator.js';
 
 const router = express.Router();
 
@@ -16,8 +21,8 @@ router.get('/used', getUsedCategories);
 router.use(authCheck, adminCheck);
 
 router.get('/', getAllCategories);
-router.post('/', createCategory);
-router.put('/:id', updateCategory);
+router.post('/', validate(createCategorySchema), createCategory);
+router.put('/:id', validate(updateCategorytSchema), updateCategory);
 router.delete('/:id', deleteCategory);
 
 export default router;

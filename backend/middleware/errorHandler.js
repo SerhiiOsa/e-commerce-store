@@ -1,7 +1,13 @@
 export default (err, req, res, next) => {
-  console.error(`Error in ${err.controllerName}: `, err.message);
+  console.error(`Error in ${err.errorSource}: `, err.message);
 
-  const statusCode = err.statusCode || 500;
+  let statusCode;
+  if (err.message === 'Email is already taken') {
+    statusCode = 400;
+  } else {
+    statusCode = err.statusCode || 500;
+  }
+
   const isExpectedError = statusCode >= 400 && statusCode < 500;
 
   const message = isExpectedError ? err.message : 'Something went wrong';

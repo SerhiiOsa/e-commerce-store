@@ -3,7 +3,7 @@ export const asyncHandler = (controller) => {
     try {
       await controller(req, res, next);
     } catch (error) {
-      error.controllerName = `${controller.name} controller`;
+      error.errorSource = `${controller.name} controller`;
       next(error);
     }
   };

@@ -6,12 +6,6 @@ export const createCheckoutSession = asyncHandler(
     const { products, couponCode } = req.body;
     const userId = req.user._id;
 
-    if (!Array.isArray(products) || products.length === 0) {
-      const error = new Error('Invalid or empty products array');
-      error.statusCode = 400;
-      throw error;
-    }
-
     const { id, totalAmount } = await paymentService.createCheckoutSession(
       products,
       couponCode,

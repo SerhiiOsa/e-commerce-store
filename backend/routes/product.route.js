@@ -11,6 +11,11 @@ import {
 } from '../controllers/product.controller.js';
 import authCheck from '../middleware/authCheck.js';
 import adminCheck from '../middleware/adminCheck.js';
+import validate from '../middleware/validator.js';
+import {
+  createProductSchema,
+  updateProductSchema,
+} from '../validators/product.validator.js';
 
 const router = express.Router();
 
@@ -21,8 +26,8 @@ router.get('/category/:category', getProductsByCategory);
 router.use(authCheck, adminCheck);
 
 router.get('/', getAllProducts);
-router.post('/', createProduct);
-router.put('/:id', updateProduct);
+router.post('/', validate(createProductSchema), createProduct);
+router.put('/:id', validate(updateProductSchema), updateProduct);
 router.patch('/:id', toggleFeaturedProduct);
 router.delete('/:id', deleteProduct);
 
