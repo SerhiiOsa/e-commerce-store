@@ -24,7 +24,6 @@ const GiftCouponCard = () => {
 
   const handleRemoveCoupon = async () => {
     await removeCoupon();
-    setUserInputCode('');
   };
 
   return (
@@ -47,25 +46,27 @@ const GiftCouponCard = () => {
             id="voucher"
             className="block w-full rounded-lg border border-gray-600 bg-gray-700 
             p-2.5 text-sm text-white placeholder-gray-400 focus:border-emerald-500 
-            focus:ring-emerald-500"
+            focus:ring-emerald-500 disabled:text-emerald-300 disabled:cursor-not-allowed"
             placeholder="Enter code here"
             value={userInputCode}
             onChange={(e) => setUserInputCode(e.target.value)}
+            disabled={isCouponApplied}
             required
           />
         </div>
-
-        <motion.button
-          type="button"
-          className="flex w-full items-center justify-center rounded-lg bg-emerald-600 px-5 py-2.5 
+        {coupon && !isCouponApplied && (
+          <motion.button
+            type="button"
+            className="flex w-full items-center justify-center rounded-lg bg-emerald-600 px-5 py-2.5 
           text-sm font-medium text-white hover:bg-emerald-700 focus:outline-none focus:ring-4 
           focus:ring-emerald-300 cursor-pointer"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={handleApplyCoupon}
-        >
-          Apply Code
-        </motion.button>
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleApplyCoupon}
+          >
+            Apply Code
+          </motion.button>
+        )}
       </div>
       {isCouponApplied && coupon && (
         <div className="mt-4">
