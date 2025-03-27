@@ -2,10 +2,12 @@ import { create } from 'zustand';
 import toast from 'react-hot-toast';
 import axios from '../lib/axios';
 
-export const useProductStore = create((set) => ({
+export const useProductStore = create((set, get) => ({
   products: [],
+  product: null,
   loading: false,
   setProducts: (products) => set({ products }),
+  setProduct: (product) => set({ product }),
 
   fetchAllProducts: async () => {
     set({ loading: true });
@@ -15,6 +17,17 @@ export const useProductStore = create((set) => ({
     } catch (error) {
       toast.error(error.response.data.error);
       set({ error: 'Failed to fetch products', loading: false });
+    }
+  },
+
+  fetchOneProduct: async (productId) => {
+    set({ loading: true });
+    try {
+      const response = await axios.get(`/products/${productId}`);
+      set({ product: response.data.product, loading: false });
+    } catch (error) {
+      toast.error(error.response.data.error);
+      set({ error: 'Failed to fetch product', loading: false });
     }
   },
 
@@ -101,6 +114,18 @@ export const useProductStore = create((set) => ({
       }));
     } catch (error) {
       toast.error(error.response.data.error || 'Failed to toggle product');
+      set({ loading: false });
+    }
+  },
+
+  rateProduct: async (rate, productId) => {
+    set({ loading: true });
+    try {
+      await axios.post('/rating', { rate, productId });
+      set({ loading: false });
+      await get().fetchOneProduct(productId);
+    } catch (error) {
+      toast.error(error.response.data.error || 'Failed to rate product');
       set({ loading: false });
     }
   },

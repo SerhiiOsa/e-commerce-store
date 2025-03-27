@@ -4,6 +4,7 @@ import {
   deleteProduct,
   getAllProducts,
   getFeaturedProducts,
+  getProductById,
   getProductsByCategory,
   getRecommendedProducts,
   toggleFeaturedProduct,
@@ -22,6 +23,7 @@ const router = express.Router();
 router.get('/featured', getFeaturedProducts);
 router.get('/recommended', getRecommendedProducts);
 router.get('/category/:category', getProductsByCategory);
+router.get('/:id', getProductById);
 
 router.use(authCheck, adminCheck);
 

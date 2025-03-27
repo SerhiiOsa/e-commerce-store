@@ -1,5 +1,6 @@
 import redisClient from '../config/redis.js';
 import cloudinary from '../config/cloudinary.js';
+import Product from '../models/product.model.js';
 
 export const getStoredFeaturedProducts = async () => {
   try {
@@ -37,4 +38,16 @@ export const deleteImageFromCloudinary = async (image) => {
   } catch (error) {
     console.error(error);
   }
+};
+
+export const getProductOrFail = async (productId) => {
+  const product = await Product.findById(productId);
+
+  if (!product) {
+    const error = new Error('Category not found');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  return product;
 };

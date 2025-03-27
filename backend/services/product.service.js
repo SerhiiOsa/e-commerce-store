@@ -1,14 +1,25 @@
 import {
   deleteImageFromCloudinary,
+  getProductOrFail,
   getStoredFeaturedProducts,
   storeFeaturedProducts,
   storeImageToCloudinary,
 } from '../helpers/productHelpers.js';
 import Product from '../models/product.model.js';
+import Rating from '../models/rating.model.js';
 
 export default {
   async getAllProducts() {
     return await Product.find().populate('category', 'name');
+  },
+
+  async getProductById(productId) {
+    let product = await getProductOrFail(productId);
+    const rating = await Rating.getAverageRating(product._id);
+    product = product.toObject();
+    product.rating = rating;
+
+    return product;
   },
 
   async getFeaturedProducts() {
@@ -71,13 +82,7 @@ export default {
   },
 
   async deleteProduct(productId) {
-    const product = await Product.findById(productId);
-
-    if (!product) {
-      const error = new Error('Product not found');
-      error.statusCode = 404;
-      throw error;
-    }
+    const product = await getProductOrFail(productId);
 
     if (product.image) {
       await deleteImageFromCloudinary(product.image);
@@ -110,13 +115,7 @@ export default {
   },
 
   async toggleFeaturedProduct(productId) {
-    const product = await Product.findById(productId);
-
-    if (!product) {
-      const error = new Error('Product not found');
-      error.statusCode = 404;
-      throw error;
-    }
+    const product = await getProductOrFail(productId);
 
     product.isFeatured = !product.isFeatured;
     const updatedProduct = await product.save();

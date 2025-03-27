@@ -6,6 +6,7 @@ import cartRoutes from './cart.route.js';
 import couponRoutes from './coupon.route.js';
 import paymentRoutes from './payment.route.js';
 import analyticsRoutes from './analitycs.route.js';
+import ratingRoutes from './rating.route.js';
 import errorHandler from '../middleware/errorHandler.js';
 
 const router = express.Router();
@@ -19,6 +20,7 @@ apiRouter.use('/cart', cartRoutes);
 apiRouter.use('/coupons', couponRoutes);
 apiRouter.use('/payments', paymentRoutes);
 apiRouter.use('/analytics', analyticsRoutes);
+apiRouter.use('/rating', ratingRoutes);
 
 router.use('/api/v1', apiRouter);
 

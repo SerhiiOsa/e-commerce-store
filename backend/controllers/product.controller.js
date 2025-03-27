@@ -9,6 +9,16 @@ export const getAllProducts = asyncHandler(async function getAllProducts(
   res.status(200).json({ products });
 });
 
+export const getProductById = asyncHandler(async function getProductById(
+  req,
+  res
+) {
+  const productId = req.params.id;
+
+  const product = await productService.getProductById(productId);
+  res.status(200).json({ product });
+});
+
 export const getFeaturedProducts = asyncHandler(
   async function getFeaturedProducts(req, res) {
     const featuredProducts = await productService.getFeaturedProducts();

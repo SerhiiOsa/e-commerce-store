@@ -16,6 +16,7 @@ import PurchaseCancelPage from './pages/PurchaseCancelPage';
 
 import Navbar from './components/Navbar';
 import LoadingSpinner from './components/LoadingSpinner';
+import ProductPage from './pages/ProductPage';
 
 function App() {
   const { user, checkAuth, checkingAuth } = useUserStore();
@@ -51,6 +52,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/category/:category" element={<CategoryPage />} />
+          <Route path="/product/:productId" element={<ProductPage />} />
           <Route
             path="/signup"
             element={!user ? <SignUpPage /> : <Navigate to={'/'} />}

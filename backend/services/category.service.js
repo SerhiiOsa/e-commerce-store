@@ -46,7 +46,7 @@ export default {
   },
 
   async updateCategory(categoryId, name, image) {
-    const category = getCategoryOrFail(categoryId);
+    const category = await getCategoryOrFail(categoryId);
 
     let imageUrl = category.image;
     if (image) {
@@ -64,7 +64,7 @@ export default {
   },
 
   async deleteCategory(categoryId) {
-    const category = getCategoryOrFail(categoryId);
+    const category = await getCategoryOrFail(categoryId);
 
     await validateCategoryDeletion(categoryId);
 
