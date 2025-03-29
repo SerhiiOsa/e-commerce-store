@@ -7,6 +7,7 @@ import {
 } from '../helpers/productHelpers.js';
 import Product from '../models/product.model.js';
 import Rating from '../models/rating.model.js';
+import Reviews from '../models/review.model.js';
 
 export default {
   async getAllProducts() {
@@ -18,6 +19,11 @@ export default {
     const rating = await Rating.getAverageRating(product._id);
     product = product.toObject();
     product.rating = rating;
+
+    const reviews = await Reviews.find({ product: productId })
+      .sort({ createdAt: -1 })
+      .populate('user', 'name');
+    product.reviews = reviews;
 
     return product;
   },

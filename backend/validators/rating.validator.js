@@ -5,6 +5,9 @@ export const rateProductSchema = Joi.object({
     rate: Joi.number().integer().required().min(1).max(5),
     productId: Joi.string()
       .required()
-      .pattern(/^[0-9a-fA-F]{24}$/),
+      .pattern(/^[0-9a-fA-F]{24}$/)
+      .message(
+        'Invalid productId format. It must be a valid MongoDB ObjectId.'
+      ),
   }),
 });
