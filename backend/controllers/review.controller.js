@@ -30,3 +30,51 @@ export const deleteReview = asyncHandler(async function deleteReview(req, res) {
   await reviewService.deleteReview(reviewId, userId, isAdmin);
   res.status(200).json({ message: 'Review deleted successfully' });
 });
+
+export const commentOnReview = asyncHandler(async function commentOnReview(
+  req,
+  res
+) {
+  const { text } = req.body;
+  const { reviewId } = req.params;
+  const userId = req.user._id;
+
+  const commentedReview = await reviewService.commentOnReview(
+    text,
+    reviewId,
+    userId
+  );
+  res.status(201).json({ commentedReview });
+});
+
+export const updateCommentOnReview = asyncHandler(
+  async function updateCommentOnReview(req, res) {
+    const { text } = req.body;
+    const { reviewId, commentId } = req.params;
+    const userId = req.user._id;
+
+    await reviewService.updateCommentOnReview(
+      text,
+      reviewId,
+      commentId,
+      userId
+    );
+    res.status(200).json({ message: 'Comment updated successfully' });
+  }
+);
+
+export const deleteCommentOnReview = asyncHandler(
+  async function deleteCommentOnReview(req, res) {
+    const { reviewId, commentId } = req.params;
+    const userId = req.user._id;
+    const isAdmin = req.user.role === 'admin';
+
+    await reviewService.deleteCommentOnReview(
+      reviewId,
+      commentId,
+      userId,
+      isAdmin
+    );
+    res.status(200).json({ message: 'Comment deleted successfully' });
+  }
+);

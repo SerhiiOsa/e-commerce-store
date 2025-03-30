@@ -1,3 +1,4 @@
+import { populate } from 'dotenv';
 import {
   deleteImageFromCloudinary,
   getProductOrFail,
@@ -22,7 +23,8 @@ export default {
 
     const reviews = await Reviews.find({ product: productId })
       .sort({ createdAt: -1 })
-      .populate('user', 'name');
+      .populate('user', 'name')
+      .populate('comments.user', 'name');
     product.reviews = reviews;
 
     return product;

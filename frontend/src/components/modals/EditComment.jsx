@@ -3,17 +3,17 @@ import { Loader, BookPlus } from 'lucide-react';
 import { useReviewStore } from '../../stores/useReviewStore';
 import { useProductStore } from '../../stores/useProductStore';
 
-const EditReview = ({ show, handleClose, review, productId }) => {
+const EditComment = ({ show, handleClose, reviewId, comment, productId }) => {
   const dialogRef = useRef(null);
-  const [reviewData, setReviewData] = useState({ text: review?.text || '' });
+  const [commentData, setCommentData] = useState({ text: comment?.text || '' });
 
-  const { editReview, loading } = useReviewStore();
+  const { editComment, loading } = useReviewStore();
   const { fetchOneProduct } = useProductStore();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await editReview(review._id, reviewData);
-    setReviewData({ text: '' });
+    await editComment(reviewId, comment._id, commentData);
+    setCommentData({ text: '' });
     await fetchOneProduct(productId);
     handleClose();
   };
@@ -21,11 +21,11 @@ const EditReview = ({ show, handleClose, review, productId }) => {
   useEffect(() => {
     if (show) {
       dialogRef.current?.showModal();
-      setReviewData({ text: review?.text || '' });
+      setCommentData({ text: comment?.text || '' });
     } else {
       dialogRef.current?.close();
     }
-  }, [show, review]);
+  }, [show, comment]);
 
   return (
     <dialog
@@ -39,7 +39,7 @@ const EditReview = ({ show, handleClose, review, productId }) => {
       fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
       >
         <h2 className="text-2xl font-semibold mb-6 text-emerald-300">
-          Write your review
+          Edit your comment
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -54,12 +54,12 @@ const EditReview = ({ show, handleClose, review, productId }) => {
               type="text"
               id="name"
               name="text"
-              value={reviewData.text}
+              value={commentData.text}
               onChange={(e) =>
-                setReviewData({ ...reviewData, text: e.target.value })
+                setCommentData({ ...commentData, text: e.target.value })
               }
               rows="5"
-              maxLength={1000}
+              maxLength={500}
               className="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2
 						 px-3 text-white focus:outline-none focus:ring-2
 						focus:ring-emerald-500 focus:border-emerald-500"
@@ -95,4 +95,4 @@ const EditReview = ({ show, handleClose, review, productId }) => {
   );
 };
 
-export default EditReview;
+export default EditComment;

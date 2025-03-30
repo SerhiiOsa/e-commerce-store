@@ -11,3 +11,17 @@ export const getReviewOrFail = async (reviewId) => {
 
   return review;
 };
+
+export const getCommentOrFail = (review, commentId) => {
+  const comment = review.comments.find(
+    (item) => item._id.toString() === commentId
+  );
+
+  if (!comment) {
+    const error = new Error('Comment not found');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  return comment;
+};
