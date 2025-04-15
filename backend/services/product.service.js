@@ -96,7 +96,7 @@ export default {
       await deleteImageFromCloudinary(product.image);
     }
 
-    await Product.findByIdAndDelete(productId);
+    await Product.findOneAndDelete({ _id: productId });
 
     const featuredProducts = await Product.find({ isFeatured: true }).lean();
     await storeFeaturedProducts(featuredProducts);

@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import Review from './review.model.js';
 
 const productSchema = new mongoose.Schema(
   {
@@ -30,6 +31,12 @@ const productSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+productSchema.pre('findOneAndDelete', async function (next) {
+  const productId = this.getQuery()._id;
+  await Review.deleteMany({ product: productId });
+  next();
+});
 
 const Product = mongoose.model('Product', productSchema);
 
